@@ -38,11 +38,54 @@ jobs:
       - name: Build json schema
         run: make .build-json-schema
 
-      - name: Upload build artifacts
+      - name: Upload go artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-artifacts
+          path: build/go
+
+      - name: Upload docs artifacts
         uses: actions/upload-artifact@v4
         with:
           name: docs-artifacts
           path: build/docs
+
+  sync-proto-to-core:
+    runs-on: ubuntu-latest
+    needs: build-go-sdk
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: go-artifacts
+          path: build/go
+
+      - name: Clone stroppy-core
+        run: |
+          git clone https://x-access-token:${{ secrets.STROPPY_CORE_TOKEN }}@github.com/stroppy-io/stroppy-core.git
+          cd stroppy-core
+          rm -rf proto/*
+          cp -r ../build/go/* proto/
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.STROPPY_CORE_TOKEN }}
+          path: stroppy-core
+          base: main
+          branch: update-proto-${{ github.ref_name }}
+          title: "Update proto from ${{ github.repository }}@${{ github.ref_name }}"
+          delete-branch: true
+          assignees: '${{ github.actor }}'
+          reviewers: '${{ github.actor }}'
+          author: '${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>'
+          committer: '${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>'
+          commit-message: "Update proto from ${{ github.repository }}@${{ github.ref_name }}"
+          body: |
+            This PR updates proto files from `${{ github.repository }}` tag `${{ github.ref_name }}`.
 
   build-ts-sdk:
     runs-on: ubuntu-latest
@@ -69,10 +112,6 @@ jobs:
         with:
           name: ts-artifacts
           path: build/ts
-
-#  go-sdk-pr:
-#    runs-on: ubuntu-latest
-#    needs: [ build-go-sdk ]
 
   release:
     runs-on: ubuntu-latest
