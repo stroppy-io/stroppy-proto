@@ -84,7 +84,6 @@ jobs:
           title: "Update proto from ${{ github.repository }}@${{ github.ref_name }}"
           delete-branch: true
           assignees: '${{ github.actor }}'
-          reviewers: '${{ github.actor }}'
           author: '${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>'
           committer: '${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>'
           commit-message: "Update proto from ${{ github.repository }}@${{ github.ref_name }}"
