@@ -63,12 +63,16 @@ jobs:
           name: go-artifacts
           path: build/go
 
+      - name: Clone GuillaumeFalourd/formulas-training PRIVATE repository
+        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
+        with:
+          owner: 'stroppy-io'
+          repository: 'stroppy-core'
+          access-token: ${{ secrets.STROPPY_CORE_TOKEN }}
+          branch: 'main'
+
       - name: Clone stroppy-core
-        run: |
-          git clone https://x-access-token:${{ secrets.STROPPY_CORE_TOKEN }}@github.com/stroppy-io/stroppy-core.git
-          cd stroppy-core
-          rm -rf proto/*
-          cp -r ../build/go/* proto/
+        run: rm -rf stroppy-core/pkg/proto/* && cp -r build/go/* stroppy-core/pkg/proto/
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
