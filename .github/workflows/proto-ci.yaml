@@ -8,8 +8,6 @@ on:
 jobs:
   build-go-sdk:
     runs-on: ubuntu-latest
-    outputs:
-      build-dir: ${{ steps.export-path.outputs.path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,15 +35,11 @@ jobs:
       - name: Build json schema
         run: make .build-json-schema
 
-      - name: Export build path
-        id: export-path
-        run: echo "path=build" >> $GITHUB_OUTPUT
-
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: build
+          name: docs-artifacts
+          path: build/docs
 
   build-ts-sdk:
     runs-on: ubuntu-latest
@@ -70,8 +64,8 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: build
+          name: ts-artifacts
+          path: build/ts
 
 #  go-sdk-pr:
 #    runs-on: ubuntu-latest
@@ -81,11 +75,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-go-sdk, build-ts-sdk ]
     steps:
-      - name: Download build artifacts
+      - name: Download docs artifacts
         uses: actions/download-artifact@v5
         with:
-          name: build-artifacts
-          path: build
+          name: docs-artifacts
+          path: build/docs
+
+      - name: Download ts artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: ts-artifacts
+          path: build/ts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

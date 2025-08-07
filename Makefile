@@ -149,7 +149,7 @@ revision: # Recreate git tag with version tag=<semver>
 		echo "error: Specify version 'tag='"; \
 		exit 1; \
 	fi
-	git tag -d v${tag} || true
-	git push --delete origin v${tag} || true
-	git tag v$(tag)
-	git push origin v$(tag)
+	git tag -d ${tag} || true
+	git push --delete origin ${tag} || true
+	git tag $(tag)
+	git push origin $(tag)
