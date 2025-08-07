@@ -1,0 +1,97 @@
+name: proto-ci
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-go-sdk:
+    runs-on: ubuntu-latest
+    outputs:
+      build-dir: ${{ steps.export-path.outputs.path }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.3'
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+
+      - name: Install bin dependencies
+        run: make .go-deps
+
+      - name: Build go sdk
+        run: make .build-go-sdk
+
+      - name: Install docs dependencies
+        run: make .doc-deps
+
+      - name: Build proto docs
+        run: make .build-md-docs
+
+      - name: Build json schema
+        run: make .build-json-schema
+
+      - name: Export build path
+        id: export-path
+        run: echo "path=build" >> $GITHUB_OUTPUT
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build
+
+  build-ts-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+
+      - name: Install bin dependencies
+        run: make .node-deps
+
+      - name: Build ts sdk
+        run: make .build-ts-sdk
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build
+
+#  go-sdk-pr:
+#    runs-on: ubuntu-latest
+#    needs: [ build-go-sdk ]
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [ build-go-sdk, build-ts-sdk ]
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: build-artifacts
+          path: build
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          make_latest: true
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          files: |
+            build/**

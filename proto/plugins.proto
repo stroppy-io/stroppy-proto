@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package stroppy;
+
+import "common.proto";
+import "config.proto";
+import "descriptor.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/picodata/stroppy/pkg/proto";
+
+
+/**
+ * BuildQueriesContext provides the context needed to build database queries.
+ */
+message BuildQueriesContext {
+    StepContext context = 1;
+    stroppy.StepQueryDescriptor query = 2;
+}
+
+/**
+ * DriverQuery represents a query that can be executed by a database driver.
+ */
+message DriverQuery {
+    string name = 1;
+    string request = 2;
+    repeated stroppy.Value params = 3;
+}
+
+/**
+ * DriverQueriesList is a collection of DriverQuery messages.
+ */
+message DriverQueriesList {
+    repeated DriverQuery queries = 1;
+}
+
+/**
+ * DriverPlugin defines the gRPC service that database driver plugins must implement.
+ */
+service DriverPlugin {
+    rpc Initialize (stroppy.StepContext) returns (google.protobuf.Empty);
+    rpc BuildQueries (BuildQueriesContext) returns (DriverQueriesList);
+    rpc RunQuery (DriverQuery) returns (google.protobuf.Empty);
+    rpc Teardown (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
