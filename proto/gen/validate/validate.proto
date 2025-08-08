@@ -4,7 +4,7 @@ package validate;
 
 import "google/protobuf/descriptor.proto";
 
-option go_package = "github.com/picodata/stroppy/pkg/proto/gen/validate";
+option go_package = "github.com/stroppy-io/stroppy-core/pkg/proto/gen/validate";
 
 // Validation rules applied at the message level
 extend google.protobuf.MessageOptions {

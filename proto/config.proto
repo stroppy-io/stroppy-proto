@@ -7,7 +7,7 @@ import "descriptor.proto";
 import "gen/validate/validate.proto";
 import "google/protobuf/duration.proto";
 
-option go_package = "github.com/picodata/stroppy/pkg/proto";
+option go_package = "github.com/stroppy-io/stroppy-core/pkg/proto";
 
 /**
  * OtlpExport contains configuration for exporting metrics via OpenTelemetry Protocol (OTLP).
@@ -135,10 +135,10 @@ message StepContext {
  * RunConfig contains the complete configuration for a benchmark run.
 */
 message RunConfig {
+    /** Run identifier for reproducible test runs or debugging */
+    string run_id = 1;
     /** Random seed for reproducible test runs */
-    uint64 seed = 1 [(validate.rules).uint64.gte = 0];
-    /** Path to the benchmark descriptor file */
-    string descriptor_path = 2 [(validate.rules).string.uri_ref = true];
+    uint64 seed = 2 [(validate.rules).uint64.gte = 0];
     /** Database driver configuration */
     DriverConfig driver = 3 [(validate.rules).message.required = true];
     /** Go executor configuration */
@@ -154,6 +154,8 @@ message RunConfig {
     ];
     /** Logging configuration */
     LoggerConfig logger = 7;
+    /** Arbitrary metadata, may be passed to result labels and json output */
+    map<string, string> metadata = 8;
 }
 
 
@@ -161,8 +163,14 @@ message RunConfig {
  * Config contains the complete configuration for a benchmark run.
  */
 message Config {
+    /**
+     * Version of the configuration format e.g. proto files version.
+     * This is used for backward compatibility of configs
+     * and will be set automatically from binary run if not present.
+     */
+    string version = 1;
     /** RunConfig contains the complete configuration for a benchmark run. */
-    RunConfig run = 1 [(validate.rules).message.required = true];
+    RunConfig run = 2 [(validate.rules).message.required = true];
     /** BenchmarkDescriptor defines a complete benchmark consisting of multiple steps. */
-    BenchmarkDescriptor benchmark = 2 [(validate.rules).message.required = true];
+    BenchmarkDescriptor benchmark = 3 [(validate.rules).message.required = true];
 }

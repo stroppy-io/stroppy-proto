@@ -1,7 +1,7 @@
 syntax = "proto2";
 package defaults;
 
-option go_package = "github.com/picodata/stroppy/pkg/proto/gen/defaults";
+option go_package = "github.com/stroppy-io/stroppy-core/pkg/proto/gen/defaults";
 
 import "google/protobuf/descriptor.proto";
 

@@ -5,7 +5,7 @@ package stroppy;
 import "gen/validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/picodata/stroppy/pkg/proto";
+option go_package = "github.com/stroppy-io/stroppy-core/pkg/proto";
 
 /**
  * Decimal represents an arbitrary-precision decimal number.

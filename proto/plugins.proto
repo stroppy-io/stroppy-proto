@@ -7,7 +7,7 @@ import "config.proto";
 import "descriptor.proto";
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/picodata/stroppy/pkg/proto";
+option go_package = "github.com/stroppy-io/stroppy-core/pkg/proto";
 
 
 /**
