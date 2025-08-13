@@ -135,8 +135,11 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          make_latest: true
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
+          make_latest: true
+          draft: false
+          prerelease: false
+          generate_release_notes: true
           files: |
             build/**
