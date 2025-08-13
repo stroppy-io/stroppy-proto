@@ -69,8 +69,8 @@ REQUIRED_BINS = git node npm go protoc \
 	GOBIN=$(LOCAL_BIN) GOPROXY=direct go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
 	GOBIN=$(LOCAL_BIN) GOPROXY=direct go install github.com/pubg/protoc-gen-jsonschema@latest
 
-.PHONY: .bin-deps
-.bin-deps: .go-deps .node-deps .doc-deps # Install binary dependencies in ./bin
+.PHONY: bin-deps
+bin-deps: .go-deps .node-deps .doc-deps # Install binary dependencies in ./bin
 
 PROTO_PATH=./proto
 PROTO_PATH_FULL=$(CURDIR)/proto
@@ -99,6 +99,7 @@ TMP_BUNDLE_DIR=$(TS_BUNDLE_DIR)/tmp
 	cp $(TS_BUNDLE_DIR)/tsconfig.json $(TMP_BUNDLE_DIR)/
 	cp $(TS_BUNDLE_DIR)/webpack.config.js $(TMP_BUNDLE_DIR)/
 	cd $(TMP_BUNDLE_DIR) && npm install && node combine.js && npm run build
+	cat $(TMP_BUNDLE_DIR)/stroppy-sdk.ts >> $(TMP_BUNDLE_DIR)/stroppy.pb.ts
 	cp $(TMP_BUNDLE_DIR)/stroppy.pb.ts $(TS_TARGET_DIR)/stroppy.pb.ts
 	cp $(TMP_BUNDLE_DIR)/dist/bundle.js $(TS_TARGET_DIR)/stroppy.pb.js
 	rm -rf $(TMP_BUNDLE_DIR)
