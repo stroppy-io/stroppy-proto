@@ -9,7 +9,10 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',          // Загрузчик для TypeScript
+                use: {
+                    loader: 'ts-loader',
+                    options: { transpileOnly: true }
+                },          // Загрузчик для TypeScript
                 exclude: /node_modules/,
             },
         ],
@@ -17,6 +20,8 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],  // Разрешает импорт без указания расширений
     },
+    externalsType: 'commonjs',
+    externals: [/^k6(\/.*)?$/],
     output: {
         filename: 'bundle.js',         // Итоговый файл
         path: path.resolve(__dirname, 'dist'),

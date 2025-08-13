@@ -83,6 +83,7 @@ TS_BUNDLE_DIR=$(CURDIR)/tools/ts_bundle
 TMP_BUNDLE_DIR=$(TS_BUNDLE_DIR)/tmp
 .PHONY: .build-ts-sdk
 .build-ts-sdk: # Build ts sdk with single js file for proto files
+	rm -rf $(TMP_BUNDLE_DIR)
 	mkdir -p $(TS_TARGET_DIR)
 	mkdir -p $(TMP_BUNDLE_DIR)
 	mkdir -p $(TMP_BUNDLE_DIR)/ts_sdk
@@ -98,9 +99,8 @@ TMP_BUNDLE_DIR=$(TS_BUNDLE_DIR)/tmp
 	cp $(TS_BUNDLE_DIR)/package.json $(TMP_BUNDLE_DIR)/
 	cp $(TS_BUNDLE_DIR)/tsconfig.json $(TMP_BUNDLE_DIR)/
 	cp $(TS_BUNDLE_DIR)/webpack.config.js $(TMP_BUNDLE_DIR)/
-	cp $(TS_BUNDLE_DIR)/stroppy-sdk.ts $(TMP_BUNDLE_DIR)/
+	cp $(TS_BUNDLE_DIR)/stroppy-sdk.ts $(TMP_BUNDLE_DIR)/ts_sdk/
 	cd $(TMP_BUNDLE_DIR) && npm install && node combine.js && npm run build
-	cat $(TMP_BUNDLE_DIR)/stroppy-sdk.ts >> $(TMP_BUNDLE_DIR)/stroppy.pb.ts
 	cp $(TMP_BUNDLE_DIR)/stroppy.pb.ts $(TS_TARGET_DIR)/stroppy.pb.ts
 	cp $(TMP_BUNDLE_DIR)/dist/bundle.js $(TS_TARGET_DIR)/stroppy.pb.js
 	rm -rf $(TMP_BUNDLE_DIR)

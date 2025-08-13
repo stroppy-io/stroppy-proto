@@ -1,10 +1,10 @@
+// @ts-ignore
 import stroppy from "k6/x/stroppy";
-import {Options} from 'k6/options';
 import {Counter,Trend} from 'k6/metrics';
 
 export type ProtoSerialized<T extends any> = string;
 
-interface StroppyXk6Instance {
+export interface StroppyXk6Instance {
     setup(config: ProtoSerialized<StepContext>): Error | undefined;
 
     generateQueue(): ProtoSerialized<DriverQueriesList>;
@@ -24,6 +24,8 @@ function numberOrDefault(value: any, defaultValue: number): number {
     }
     return isNaN(Number(value)) === true ? defaultValue : Number(value)
 }
+
+export const INSTANCE: StroppyXk6Instance = stroppy.new();
 
 // passed from Golang execution
 export const STROPPY_CONTEXT: StepContext = StepContext.fromJsonString(__ENV.context);
@@ -51,8 +53,6 @@ function setupMetrics() {
 }
 
 setupMetrics();
-
-export const INSTANCE: StroppyXk6Instance = stroppy.new();
 
 interface CounterMeter {
     values: { count: number, rate: number }
@@ -143,4 +143,3 @@ export class RunResult<T extends any> {
             .replace(/(\n\s*\n)+/g, "\n");
     }
 }
-
