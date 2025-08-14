@@ -48,12 +48,6 @@ export const METER_REQUESTS_COUNTER = new Counter("total_requests");
 export const METER_REQUEST_ERROR_COUNTER = new Counter("total_errors");
 export const METER_RESPONSES_TIME_TREND = new Trend("response_time");
 
-function setupMetrics() {
-    METER_REQUEST_ERROR_COUNTER.add(0);
-}
-
-setupMetrics();
-
 interface CounterMeter {
     values: { count: number, rate: number }
 }
