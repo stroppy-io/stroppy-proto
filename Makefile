@@ -99,8 +99,9 @@ TMP_BUNDLE_DIR=$(TS_BUNDLE_DIR)/tmp
 	cp $(TS_BUNDLE_DIR)/package.json $(TMP_BUNDLE_DIR)/
 	cp $(TS_BUNDLE_DIR)/tsconfig.json $(TMP_BUNDLE_DIR)/
 	cp $(TS_BUNDLE_DIR)/webpack.config.js $(TMP_BUNDLE_DIR)/
-	cp $(TS_BUNDLE_DIR)/stroppy-sdk.ts $(TMP_BUNDLE_DIR)/ts_sdk/
-	cd $(TMP_BUNDLE_DIR) && npm install && node combine.js && npm run build
+	cd $(TMP_BUNDLE_DIR) && npm install && node combine.js
+	cat $(TS_BUNDLE_DIR)/stroppy-sdk.ts >> $(TMP_BUNDLE_DIR)/stroppy.pb.ts
+	cd $(TMP_BUNDLE_DIR) && npm run build
 	cp $(TMP_BUNDLE_DIR)/stroppy.pb.ts $(TS_TARGET_DIR)/stroppy.pb.ts
 	cp $(TMP_BUNDLE_DIR)/dist/bundle.js $(TS_TARGET_DIR)/stroppy.pb.js
 	rm -rf $(TMP_BUNDLE_DIR)
