@@ -124,11 +124,13 @@ message LoggerConfig {
  */
 message StepContext {
     /** Current run configuration */
-    RunConfig config = 1;
+    RunConfig config = 1 [deprecated = true]; // deprecated, use global_config.run instead
     /** Benchmark descriptor */
-    BenchmarkDescriptor benchmark = 4;
+    BenchmarkDescriptor benchmark = 4 [deprecated = true]; // deprecated, use global_config.benchmark instead
     /** Current step descriptor */
     StepDescriptor step = 5;
+    /** Global configuration of the benchmark and its steps */
+    Config global_config = 6;
 }
 
 /**
