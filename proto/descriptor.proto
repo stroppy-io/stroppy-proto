@@ -133,10 +133,11 @@ message TransactionDescriptor {
 }
 
 /**
- * StepQueryDescriptor represents a single query or table creation operation
- * that can be part of a benchmark step.
+ * StepUnitDescriptor represents a single unit of work.
+ * It can be a table creation operation, a query execution operation, or a transaction execution operation.
+ * It also specifies whether to execute this operation asynchronously.
  */
-message StepQueryDescriptor {
+message StepUnitDescriptor {
     oneof type {
         option (validate.required) = true;
         /** Table creation operation */
@@ -152,12 +153,13 @@ message StepQueryDescriptor {
 
 /**
  * StepDescriptor represents a logical step in a benchmark.
+ * It contains a list of operations to perform in this step.
  */
 message StepDescriptor {
     /** Name of the step */
     string name = 1 [(validate.rules).string.min_len = 1];
     /** List of operations to perform in this step */
-    repeated StepQueryDescriptor queries = 2 [
+    repeated StepUnitDescriptor units = 2 [
         (validate.rules).repeated = {
             min_items: 1,
             items: {message: {required: true}}
