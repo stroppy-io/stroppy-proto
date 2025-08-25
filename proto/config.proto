@@ -134,8 +134,24 @@ message StepContext {
 }
 
 /**
+ * Plugins contains configuration for plugins.
+ */
+message Plugin {
+    enum Type {
+        TYPE_UNSPECIFIED = 0;
+        TYPE_SIDECAR = 1;
+    }
+    /** Type of the plugin */
+    Type type = 1 [(validate.rules).enum.defined_only = true];
+    /** Path to the plugin binary */
+    string path = 2 [(validate.rules).string.uri_ref = true];
+    /** Additional plugin settings */
+    optional Value.Struct settings = 3;
+}
+
+/**
  * RunConfig contains the complete configuration for a benchmark run.
-*/
+ */
 message RunConfig {
     /** Run identifier for reproducible test runs or debugging */
     string run_id = 1;
@@ -158,6 +174,8 @@ message RunConfig {
     LoggerConfig logger = 7;
     /** Arbitrary metadata, may be passed to result labels and json output */
     map<string, string> metadata = 8;
+    /** Plugins configuration */
+    repeated Plugin plugins = 9;
 }
 
 
