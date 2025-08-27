@@ -77,36 +77,6 @@ service DriverPlugin {
     rpc Teardown (google.protobuf.Empty) returns (google.protobuf.Empty);
 }
 
-message OnStepQueryBuildEvent {
-    /**
-     * Context contains the information needed to build a transaction from a unit.
-    */
-    UnitBuildContext context = 1;
-    /**
-     * The list of transactions was built from the StepUnitDescriptor
-    */
-    optional DriverTransactionList transaction_list = 2;
-    /**
-     * Error is an optional error message
-    */
-    optional string error = 3;
-}
-
-message OnStepQueryRunEvent {
-    /**
-     * Context contains the step context and the step query descriptor
-    */
-    StepContext context = 1;
-    /**
-     * Query is the query to run
-    */
-    DriverQuery query = 2;
-    /**
-     * Error is an optional error message
-    */
-    optional string error = 3;
-}
-
 /**
  * SidecarPlugin defines the gRPC service that sidecar plugins must implement.
 */
@@ -120,14 +90,6 @@ service SidecarPlugin {
      * OnStepStart is called once before each step starts.
     */
     rpc OnStepStart (stroppy.StepContext) returns (google.protobuf.Empty);
-    /**
-     * OnStepQuery is called after driver BuildQueries is called.
-    */
-    rpc OnStepQueryBuild (OnStepQueryBuildEvent) returns (google.protobuf.Empty);
-    /**
-     * OnStepQueryRun is called after driver RunQuery is called.
-    */
-    rpc OnStepQueryRun (OnStepQueryRunEvent) returns (google.protobuf.Empty);
     /**
      * OnStepEnd is called once after each step ends.
     */
